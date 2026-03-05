@@ -1,5 +1,5 @@
 <div align="center">
-  <img src=".Docs/Imgs/LogoTitans.png" alt="Logo da Equipe TITANS" width="200"/>
+  <img src="./Docs/Imgs/LogoTitans.png" alt="Logo da Equipe TITANS" width="200"/>
 
   # 🤖 VSSS - Robô de Futebol Autônomo
   **Equipe TITANS de Robótica | FCTE - Universidade de Brasília (UnB)**
