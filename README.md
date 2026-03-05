@@ -56,9 +56,9 @@ Antes de começar, você precisará ter instalado em sua máquina:
    ```
 2. Acesse a pasta do projeto:
    ```bash
-   cd [NOME_DO_REPOSITORIO]
+   cd Projeto_V3S
    ```
-3. Instale as dependências necessárias (Exemplo para Python):
+3. Instale as dependências necessárias:
    ```bash
    pip install -r requirements.txt
    ```
