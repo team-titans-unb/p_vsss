@@ -1,5 +1,5 @@
 <div align="center">
-  <img src=".Docs/Imgs/LogoTitans.png" alt="Logo da Equipe TITANS" width="200"/>
+  <img src="./Docs/Imgs/LogoTitans.png" alt="Logo da Equipe TITANS" width="200"/>
 
   # 🤖 VSSS - Robô de Futebol Autônomo
   **Equipe TITANS de Robótica | FCTE - Universidade de Brasília (UnB)**
@@ -18,7 +18,7 @@ Este repositório contém o código-fonte, esquemas eletrônicos e documentaçã
 A categoria VSSS consiste em partidas de futebol de robôs autônomos de 3 contra 3. Cada robô deve caber em um cubo de 7.5 x 7.5 x 7.5 cm e não possui controle humano durante o jogo. Toda a estratégia, controle PID, visão computacional e comunicação sem fio operam em conjunto para que o time marque gols e defenda sua área.
 
 <div align="center">
-  <img src="[z]" alt="Robô VSSS em ação" width="600"/>
+  <img src="./Docs/Imgs/video.gif" alt="Robô VSSS em ação" width="600"/>
 </div>
 
 ---
