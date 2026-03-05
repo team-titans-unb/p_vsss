@@ -8,8 +8,8 @@ Devido às limitações de versionamento de arquivos binários no Git, utilizamo
 
 Para visualizar o projeto completo, histórico de modificações ou contribuir com a modelagem da mecânica:
 
-1. Crie uma conta na [Autodesk](https://www.autodesk.com/) (recomenda-se usar o e-mail institucional para a licença educacional).
-2. Solicite o convite para o nosso projeto no Fusion Team enviando uma mensagem no nosso canal de comunicação ou entrando em contato com os diretores de mecânica.
+1. Crie uma conta na [Autodesk](https://www.autodesk.com/) (recomenda-se usar o e-mail institucional para a licença educacional) e baixe o Autodesk Fusion.
+2. Solicite o convite para o nosso projeto no Fusion Team enviando uma mensagem para o Filipe Barbosa, atual gerente do projeto.
 3. [Link de visualização pública do CAD atual] *(Opcional: O Fusion permite gerar um link de visualização na web que você pode colocar aqui para quem só quer "olhar" o robô em 3D sem ter conta).*
 
 ## 📂 Organização desta pasta
