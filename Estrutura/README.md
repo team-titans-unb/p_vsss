@@ -18,7 +18,7 @@ Aqui no GitHub, você encontrará apenas arquivos estáticos das versões finali
 
 * `/STL`: Peças isoladas e otimizadas, prontas para fatiamento e impressão 3D.
 * `/STEP`: Montagem completa do robô em formato universal, ideal para a equipe de software consultar medidas, encaixes e geometria.
-* `/Documentacao`: Desenhos técnicos, cálculos de torque, escolha de motores e relatórios de montagem.
+* `/Documentacao`: Desenhos técnicos, escolha de motores e relatórios de montagem.
 
 ## 🛠️ Fluxo de Trabalho
 1. Todo novo design é desenhado no Fusion.
