@@ -69,8 +69,8 @@ class Corobeu:
                     robot.y / 1000,
                     robot.orientation,
                     frame.detection.balls[0].x / 1000,
+                    frame.detection.balls[0].y / 1000
                 )
-                frame.detection.balls[0].y / 1000
         return None, None, None, None, None
 
     def speed_control(self, U, omega):
