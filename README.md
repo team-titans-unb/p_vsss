@@ -40,7 +40,7 @@ Para facilitar o desenvolvimento multidisciplinar, nosso projeto está dividido 
 * **Mecânica:** Autodesk Fusion (Modelagem 3D) e Impressão 3D.
 
 ---
-** 
+
 ## 🚀 Como Começar (Setup Local)
 
 ### Pré-requisitos
