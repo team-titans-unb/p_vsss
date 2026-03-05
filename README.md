@@ -26,33 +26,33 @@ A categoria VSSS consiste em partidas de futebol de robôs autônomos de 3 contr
 ## 🗺️ Arquitetura do Repositório
 Para facilitar o desenvolvimento multidisciplinar, nosso projeto está dividido nas seguintes áreas:
 
-* 📂 **`/src`**: Código principal, incluindo a inteligência artificial, controle de trajetória e estratégias de jogo.
-* 📂 **`/visao`**: Scripts de visão computacional (processamento da imagem da câmera sobre o campo).
-* 📂 **`/eletronica`**: Esquemas de firmware, projetos de PCB e códigos para o microcontrolador (ESP32).
-* 📂 **`/Estrutura`**: Versões estáveis (Releases) do projeto 3D (.STEP e .STL). *O desenvolvimento ativo de CAD ocorre no Autodesk Fusion.* (Veja o [README de Estrutura](./Estrutura/README.md) para acesso).
+* 📂 **`/Controle`**: Código principal, onde está o comportamento do robô e a visão computacional.  
+* 📂 **`/Estrutura`**: Informações sobre a estrutura e peças prontas para impressão 3D. 
+* 📂 **`/Firmware`**: Todo o código embarcado (ESP-32).
+* 📂 **`/Docs`**: Documentos e arquivos diversos.
 
 ---
 
 ## 🛠️ Tecnologias Utilizadas
-* **Software/Estratégia:** C++, Python, OpenCV.
-* **Controle e Otimização:** Algoritmos de controle (PID) e planejamento de rotas.
-* **Hardware:** Microcontrolador ESP32, módulos de rádio, motores DC com encoder.
+* **Software/Estratégia:** C++, Python.
+* **Controle e Otimização:** Algoritmos de controle (PID) e Behavior Trees.
+* **Hardware:** Microcontrolador ESP32 e motores DC com encoder.
 * **Mecânica:** Autodesk Fusion (Modelagem 3D) e Impressão 3D.
 
 ---
-
+** 
 ## 🚀 Como Começar (Setup Local)
 
 ### Pré-requisitos
 Antes de começar, você precisará ter instalado em sua máquina:
 * [Git](https://git-scm.com/)
-* [Python 3.x](https://www.python.org/) ou Compilador C++
-* [CMake](https://cmake.org/) (se aplicável)
+* [Python 3.x](https://www.python.org/)
+* [VSS-Vision](https://github.com/robocin/vss-vision)
 
 ### Instalação
 1. Clone este repositório:
    ```bash
-   git clone [https://github.com/](https://github.com/)[SEU_USUARIO_OU_ORGANIZACAO]/[NOME_DO_REPOSITORIO].git
+   git clone https://github.com/team-titans-unb/Projeto_V3S.git
    ```
 2. Acesse a pasta do projeto:
    ```bash
@@ -62,27 +62,15 @@ Antes de começar, você precisará ter instalado em sua máquina:
    ```bash
    pip install -r requirements.txt
    ```
-4. Siga as instruções específicas de compilação dentro da pasta de cada subsistema (ex: `/src` ou `/visao`).
-
----
-
-## 🤝 Como Contribuir
-Ficamos felizes com o interesse em contribuir com a TITANS! Para garantir a organização do código:
-
-1. Crie uma *branch* para a sua feature ou correção: `git checkout -b feature/minha-feature`
-2. Faça os *commits* de forma clara e descritiva: `git commit -m "feat: Adiciona novo filtro de imagem"`
-3. Envie para o repositório remoto: `git push origin feature/minha-feature`
-4. Abra um **Pull Request (PR)** e aguarde a revisão dos líderes do projeto.
-
-*(Se você for da equipe de Mecânica, lembre-se de ler o [Guia do Fusion 360](./Estrutura/README.md) antes de alterar as peças).*
+4. Ready to go!
 
 ---
 
 ## 📞 Equipe e Contatos
 Desenvolvido com 💙 pela **Equipe TITANS**.
 
-* **Instagram:** [@titans_robotica](LINK_AQUI)
-* **Email:** [EMAIL_DA_EQUIPE]
+* **Instagram:** [@robotictitans](https://www.instagram.com/robotictitans/)
+* **Email:** [vssstitans@gmail.com]
 * **Local:** FCTE - Universidade de Brasília (UnB), Campus Gama.
 
 ---
