@@ -1,4 +1,4 @@
-# Beetleweight
+# VSSS
 
 <div align="center">
   <img src="assets/titans.png" alt="Capa" width="50%">
@@ -8,8 +8,8 @@
 
 ## Sobre
 
-Repositório destinado a documentação dos robôs de combate.
-
+Repositório destinado a documentação dos robôs do v3s.
+e c
 ---
 
 ## Histórico de Versões
