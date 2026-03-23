@@ -8,9 +8,7 @@ Antes de colocarmos os robôs no campo físico, é neste ambiente virtual que te
 
 ## ⚙️ Como funciona o nosso ambiente?
 
-Para simular o jogo, nós utilizamos o **Webots** em conjunto com o **TraveSim** (um ambiente de simulação específico para o IEEE VSSS). 
-
-Para manter nosso repositório organizado e leve, **não armazenamos os arquivos do TraveSim diretamente aqui**. Em vez disso, criamos um script automatizado que baixa e compila a versão mais recente do simulador diretamente na sua máquina.
+Para simular o jogo, nós utilizamos o **CoppeliaSim**. Possuimos um mundo com o nosso robô, uma bola e um campo de VSSS, nele serão feitos os testes de controle. 
 
 ### 📋 Pré-requisitos
 Antes de rodar a simulação, certifique-se de ter instalado:
