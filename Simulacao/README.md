@@ -14,7 +14,7 @@ Para manter nosso repositório organizado e leve, **não armazenamos os arquivos
 
 ### 📋 Pré-requisitos
 Antes de rodar a simulação, certifique-se de ter instalado:
-1. **[Webots](https://cyberbotics.com/)**: O software de simulação principal.
+1. **[CoppeliaSim](https://www.coppeliarobotics.com/)**: O software de simulação principal.
 2. Ferramentas de compilação básicas (geralmente já vêm no Linux, como `make` e `gcc`).
 
 ---
@@ -23,29 +23,15 @@ Antes de rodar a simulação, certifique-se de ter instalado:
 
 Siga o passo a passo abaixo para preparar o ambiente na sua máquina pela primeira vez:
 
-### 1. Execute o Script de Instalação
-Abra o seu terminal dentro desta pasta (`Simulacao`) e dê permissão de execução ao script de setup (caso ainda não tenha). Depois, execute-o:
+### 1. Abra o mundo no Simulador
+1. Abra o CoppeliaSim
+2. Vá em `File -> Open Scene` 
+3. Abra o mundo "oneRobot.ttt", em `Simulacao/worlds`.
 
-```bash
-chmod +x setup.sh
-./setup.sh
-```
-*O que esse script faz?* Ele clona o repositório oficial do TraveSim automaticamente para dentro desta pasta e roda o comando `make` para compilar o projeto para o seu sistema operacional.
 
-### 2. Abra o Simulador
-1. Abra o **Webots** no seu computador.
-2. Vá em `File > Open World...`
-3. Navegue até a pasta `Simulacao/travesim/worlds` (que acabou de ser criada pelo script) e abra o arquivo do mundo do TraveSim.
 
-### 3. Rode a Estratégia da TITANS
-Com o simulador aberto e o jogo pausado/rodando, você já pode executar os nossos scripts de estratégia que estão aqui na pasta raiz da `Simulacao`.
+### 2. Aperte o Play
+1. Aperte no botão PLAY(Start/resume simulation) 
+2. Rode o código "main.py" em `Simulacao/vsss_simulado`.
+3. Veja a mágica acontecer!!
 
----
-
-## ⚠️ Nota Importante para Desenvolvedores
-
-Se você rodar o `git status` após usar o script, notará que a pasta `travesim/` não aparece como uma alteração pendente. 
-
-Isso é proposital! Nós adicionamos a regra `travesim/` no nosso arquivo **`.gitignore`**. Dessa forma, você pode compilar e alterar o simulador localmente sem o risco de subir arquivos binários pesados e desnecessários para o GitHub da TITANS. 
-
-**Nesta pasta do GitHub, versionamos apenas os nossos scripts de inteligência e controle.**

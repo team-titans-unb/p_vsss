@@ -261,9 +261,9 @@ if __name__ == "__main__":
         COR_DO_TIME=0,
         vision_queue=vision_queue,  # Passamos a fila aqui!
         vision_sock_out=sock_out,
-        kp=1.0,
-        ki=0.0,
-        kd=0.1,
+        kp=3.5,
+        ki=0,
+        kd=0.06,
         dt=0.033,
         omega_max=100,
     )
