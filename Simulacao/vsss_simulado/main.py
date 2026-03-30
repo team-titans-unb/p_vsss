@@ -1,14 +1,16 @@
-from vssproto.simulation.command_pb2 import Command, Commands
-from vssproto.simulation.packet_pb2 import Packet
-from perception.vision_adapter import vision_listener_process
-
-import socket
 import time
 import math
 import signal
 import sys
 import queue
 import multiprocessing
+
+from perception.vision_adapter import vision_listener_process
+
+from communication.connect_to_coppelia import connect_to_coppelia
+from communication.motor_adapter import CoppeliaMotorAdapter
+
+from config.config import _coppelia_motor_port, _coppelia_ip
 
 
 class Corobeu:
@@ -17,7 +19,7 @@ class Corobeu:
         robot_id,
         COR_DO_TIME,
         vision_queue,
-        vision_sock_out,
+        motor_adapter,
         kp,
         ki,
         kd,
@@ -29,7 +31,7 @@ class Corobeu:
 
         self.vison_queue = vision_queue
         self.last_environment_data = None
-        self.vision_sock_out = vision_sock_out
+        self.motor_adapter = motor_adapter
 
         self.kp = kp
         self.ki = ki
@@ -44,16 +46,16 @@ class Corobeu:
         # Um valor de 'alpha' próximo de 1 significa pouca filtragem.
         # Um valor próximo de 0 significa muita filtragem.
         # Uma boa regra é começar com um alpha ~0.5 e ajustar.
-        self.filter_alpha = 0.5
+        self.filter_alpha = 0.9
 
         # --- Variáveis de Estado (precisam ser lembradas entre as chamadas) ---
         self.integral = 0.0
         self.previous_error = 0.0
         self.filtered_previous_error = 0.0
 
-        self.v_max = 40
+        self.v_max = 8
         self.v_min = 0
-        self.v_linear = 40
+        self.v_linear = 8
         self.phi = 0
 
         self.last_speed_time = time.time()
@@ -80,12 +82,15 @@ class Corobeu:
         if self.last_environment_data is None:
             return None, None, None, None, None
 
-        robots = getattr(self.last_environment_data.frame, self._robot_attr)
-        for robot in robots:
-            if robot.robot_id == self.robot_id:
-                ball = self.last_environment_data.frame.ball
-                return robot.x, robot.y, robot.orientation, ball.x, ball.y
-        return None, None, None, None, None
+        dados = self.last_environment_data
+        robot_x, robot_y, robot_orientation, ball_x, ball_y = (
+            dados["robotPos"][0],
+            dados["robotPos"][1],
+            self.wrap_angle(dados["robotOri"][2] - math.pi / 2),
+            dados["ballPos"][0],
+            dados["ballPos"][1],
+        )
+        return robot_x, robot_y, robot_orientation, ball_x, ball_y
 
     def speed_control(self, U, omega):
 
@@ -106,31 +111,18 @@ class Corobeu:
 
     def send_speed(self, speed_left, speed_right):
 
-        cmd_packet = Commands()
-        cmd_packet.robot_commands.append(
-            Command(
-                id=self.robot_id,
-                yellowteam=True,
-                wheel_left=speed_left,
-                wheel_right=speed_right,
-            ),
-        )
-
-        packet = Packet()
-        packet.cmd.CopyFrom(cmd_packet)
-
-        self.vision_sock_out.send(packet.SerializeToString())
+        self.motor_adapter.send_velocities(speed_left, speed_right)
 
     def follow_ball(self):
         phi_obs = 0
 
         while True:
-            x, y, phi_obs, ball_x, ball_y = self.get_position()
+            robot_x, robot_y, phi_obs, ball_x, ball_y = self.get_position()
 
-            if x is None or y is None:
+            if robot_x is None or robot_y is None:
                 continue
 
-            phid = math.atan2((ball_y - y), (ball_x - x))
+            phid = math.atan2((ball_y - robot_y), (ball_x - robot_x))
             phid = self.wrap_angle(phid)
             phi_obs = self.wrap_angle(phi_obs)
 
@@ -228,7 +220,7 @@ class Corobeu:
         return (angle + math.pi) % (2 * math.pi) - math.pi
 
     def off(self, signum=None, frame=None):
-        self.send_speed(0, 0)
+        self.motor_adapter.stop_motors()
         sys.exit()
 
 
@@ -239,33 +231,33 @@ if __name__ == "__main__":
     # 2. Inicia o Lister (Ouvinte)
     listner = multiprocessing.Process(
         target=vision_listener_process,
-        args=(
-            "224.0.0.1",
-            10002,
-            vision_queue,
-        ),  # Endereço onde o TraveSim envia os dados da visão.
+        args=(vision_queue,),  # Endereço onde o TraveSim envia os dados da visão.
     )
     listner.daemon = True  # Faz o processo fechar sozinho quando você fechar o programa
     listner.start()
 
-    # AF_INET = IP normal (IPv4), SOCK_DGRAM = Protocolo UDP (super rápido)
-    sock_out = socket.socket(
-        socket.AF_INET, socket.SOCK_DGRAM
-    )  # Prepara o modo de envio dos dados (creio)
-    sock_out.connect(
-        ("127.0.0.1", 20012)
-    )  # Conecta com a porta, onde será feito o envio, efetivamente.
+    print("conexão com o motor abaixo: ")
+    clientID, _, motorE, motorD, _ = connect_to_coppelia(
+        _coppelia_ip, _coppelia_motor_port
+    )
+
+    motor_adapter = CoppeliaMotorAdapter(clientID, motorE, motorD)
 
     meu_robo = Corobeu(
         robot_id=0,
         COR_DO_TIME=0,
         vision_queue=vision_queue,  # Passamos a fila aqui!
-        vision_sock_out=sock_out,
+        motor_adapter=motor_adapter,
         kp=3.5,
-        ki=0,
-        kd=0.06,
+        ki=0.0,
+        kd=4,
         dt=0.033,
-        omega_max=100,
+        omega_max=8,
     )
 
-    meu_robo.follow_ball()
+    try:
+        meu_robo.follow_ball()
+    except Exception as e:
+        print(f"Uma falha interrompeu o código de controle.\n Erro: {e}")
+    finally:
+        motor_adapter.stop_motors()

@@ -1,34 +1,64 @@
-import socket
 import queue
+import time
 
-from vssproto.simulation.packet_pb2 import Environment
+from config.config import _coppelia_ip, _coppelia_vision_port
+from communication.sims import sim
+from communication.connect_to_coppelia import connect_to_coppelia
 
 
-def vision_listener_process(vision_ip, vision_port, vision_queue):
+def vision_listener_process(vision_queue):
     """
     Escuta a visão em um processo separado e coloca os dados recebidos em uma fila para processamento posterior.
     Isso evita bloqueios na thread principal e permite que a visão seja processada de forma assíncrona.
     """
-    sock_in = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock_in.bind((vision_ip, vision_port))
 
-    print(f"Vision listener started on {vision_ip}:{vision_port}")
+    time.sleep(5)
+
+    clientID, robot, _, _, ball = connect_to_coppelia(
+        _coppelia_ip, _coppelia_vision_port
+    )
+
+    # 1. ATUALIZAR DADOS DO MUNDOintegral_counter
+    sim.simxGetObjectPosition(clientID, robot, -1, sim.simx_opmode_streaming)
+    sim.simxGetObjectPosition(clientID, ball, -1, sim.simx_opmode_streaming)
+    sim.simxGetObjectOrientation(clientID, robot, -1, sim.simx_opmode_streaming)
 
     while True:
         try:
-            data, _ = sock_in.recvfrom(1024)
+            # Colhe os dados do CoppeliaSim rapidamente,
+            status_robot, robotPos = sim.simxGetObjectPosition(
+                clientID, robot, -1, sim.simx_opmode_buffer
+            )
+            status_ball, ballPos = sim.simxGetObjectPosition(
+                clientID, ball, -1, sim.simx_opmode_buffer
+            )
+            status_ori, robotOri = sim.simxGetObjectOrientation(
+                clientID, robot, -1, sim.simx_opmode_buffer
+            )
+            # print(
+            #    f"DEBUG: Status robo: {status_robot} | Status bola: {status_ball} | status ori: {status_ori} | sim: {sim.simx_return_ok}"
+            # )
+            if (
+                status_robot == sim.simx_return_ok
+                and status_ball == sim.simx_return_ok
+                and status_ori == sim.simx_return_ok
+            ):
+                dados = {
+                    "robotPos": robotPos,
+                    "ballPos": ballPos,
+                    "robotOri": robotOri,
+                }  # Transforma os dados em um dicionário.
 
-            environment_data = Environment()  # Protocolo de Profobuf
-            environment_data.ParseFromString(data)  # Tradução Protobuf
+                while (
+                    not vision_queue.empty()
+                ):  # Verifica se a Queue está vazia, se não:
+                    try:
+                        vision_queue.get_nowait()  # Remove os dados da fila e finaliza o While.
+                    except queue.Empty:  # Se estiver vazia, saimos do While e adicionamos os novos dados na fila.
+                        break  # (Sai do While)
+                vision_queue.put(dados)  # Adiciona os novos dados fresquinhos...
 
-            while not vision_queue.empty():  # Verifica se a Queue está vazia, se não:
-                try:
-                    vision_queue.get_nowait(
-                        environment_data
-                    )  # Remove os dados da fila e finaliza o While.
-                except queue.Empty:  # Se estiver vazia, saimos do While e adicionamos os novos dados na fila.
-                    break  # (Sai do While)
-            vision_queue.put(environment_data)  # Adiciona os novos dados fresquinhos...
+            time.sleep(0.005)
 
         except Exception as e:
             print(f"Error in vision listener: {e}")
