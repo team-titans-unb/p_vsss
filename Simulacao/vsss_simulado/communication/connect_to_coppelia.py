@@ -2,7 +2,7 @@ import communication.sims.sim as sim
 import sys
 
 
-def connect_to_coppelia(ip, port):
+def connect_to_coppelia(ip: str, port: int) -> tuple:
     """
     Função utilizada para conectar a porta do Coppelia para enviar comandos.
     """
@@ -25,4 +25,4 @@ def connect_to_coppelia(ip, port):
 
     # print(f"DEBUG: s_rob: {s_rob} | s_motE: {s_motE} | s_motD: {s_motD} | s_ball: {s_ball}")
 
-    return clientID, robot, motorE, motorD, ball
+    return (clientID, robot, motorE, motorD, ball)

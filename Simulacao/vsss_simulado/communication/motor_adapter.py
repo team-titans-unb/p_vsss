@@ -2,17 +2,34 @@ from communication.sims import sim
 
 
 class CoppeliaMotorAdapter:
+    """
+    Essa classe centraliza os comandos enviados para os motores do simualdor.
+    """
+
     def __init__(self, clientID, motorE_handle, motorD_handle):
         """
-        Guarda as chaves de acesso aos motores do Coppelia.
+        Essa classe centraliza os comandos enviados para os motores do simualdor.
+
+        Na inicialização, é necessário passar os dados do simulador corretamente.
+
+        Args:
+           clientID: clientID
+           motorE_handle: motorE
+           motorD_handle: motorD
+
+           obs: Todos são retornos da função "connect_to_coppelia".
         """
         self.clientID = clientID
         self.motorE = motorE_handle
         self.motorD = motorD_handle
 
-    def send_velocities(self, vl, vr):
+    def send_velocities(self, vl: int, vr: int):
         """
-        Envia as velocidades instantaneamente usando opmode_oneshot.
+        Envia as velocidades instantaneamente para os motores do simulador.
+
+        Args:
+            vl: Velocidade da roda esquerda.
+            vr: Velocidade da roda direita.
         """
         # Roda Esquerda
         sim.simxSetJointTargetVelocity(
@@ -24,5 +41,7 @@ class CoppeliaMotorAdapter:
         )
 
     def stop_motors(self):
-        """Útil para quando o jogo pausa ou o código é encerrado."""
+        """
+        Envia velocidade nula (0, 0) para os motores do simulador.
+        """
         self.send_velocities(0, 0)

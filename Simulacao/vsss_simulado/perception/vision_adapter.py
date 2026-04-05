@@ -1,18 +1,22 @@
+import multiprocessing
 import queue
 import time
+import math
 
+from common.math_utils import wrap_angle
 from config.config import _coppelia_ip, _coppelia_vision_port
 from communication.sims import sim
 from communication.connect_to_coppelia import connect_to_coppelia
 
 
-def vision_listener_process(vision_queue):
+def vision_listener_process(vision_queue: multiprocessing.Queue):
     """
     Escuta a visão em um processo separado e coloca os dados recebidos em uma fila para processamento posterior.
     Isso evita bloqueios na thread principal e permite que a visão seja processada de forma assíncrona.
-    """
 
-    time.sleep(5)
+    Args:
+        vision_queue (multiprocessing.Queue): Queue (fila) onde ficarão os dados brutos enviados pelo CoppeliaSim.
+    """
 
     clientID, robot, _, _, ball = connect_to_coppelia(
         _coppelia_ip, _coppelia_vision_port
@@ -44,9 +48,9 @@ def vision_listener_process(vision_queue):
                 and status_ori == sim.simx_return_ok
             ):
                 dados = {
-                    "robotPos": robotPos,
-                    "ballPos": ballPos,
-                    "robotOri": robotOri,
+                    "robot_position": robotPos,
+                    "ball_position": ballPos,
+                    "robot_orientation": wrap_angle(robotOri[2] - math.pi / 2),
                 }  # Transforma os dados em um dicionário.
 
                 while (
