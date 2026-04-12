@@ -1,2 +1,4 @@
 protobuf
 VSSProto
+queue
+multiprocessing
