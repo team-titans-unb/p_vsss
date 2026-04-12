@@ -1,4 +1,4 @@
-class PD_Controller:
+class PDController:
     """
     Essa classe centraliza o cálculo da velocidade ângular do robô em cada instante dt.
     """
