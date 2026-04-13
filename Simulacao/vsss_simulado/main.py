@@ -32,7 +32,7 @@ class Corobeu:
 
         self.robot_id = robot_id
 
-        self.vison_queue = vision_queue
+        self.vision_queue = vision_queue
         self.motor_adapter = motor_adapter
         self.pd_controller = pd_controller
         self.black_board = black_board
@@ -51,9 +51,10 @@ class Corobeu:
 
     def update_black_board(self) -> None:
         try:
-            self.last_environment_data = self.vison_queue.get_nowait()
-            self.black_board.update_from_vision(self.last_environment_data)
+            self.last_environment_data = self.vision_queue.get_nowait()
+            self.black_board.update(self.last_environment_data)
             return
+
         except queue.Empty:
             pass
 

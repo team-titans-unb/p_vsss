@@ -26,11 +26,9 @@ class VSSSBlackBoardManager:
         # 3 Passo: Definir estado inicial seguro
         self.data.ball_position = [0, 0, 0]
         self.data.robot_position = [0, 0, 0]
-        self.data.robot_orientation = None
+        self.data.robot_orientation = 0
 
-    def update_from_vision(
-        self, dados: Dict[str, tuple[float | None, float | None]]
-    ) -> None:
+    def update(self, dados: Dict[str, tuple[float | None, float | None]]) -> None:
         """
         Recebe um dicionário de visão e publica na BlackBoard.
 
