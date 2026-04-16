@@ -24,3 +24,14 @@ def wrap_angle(angle: float) -> float:
         obs: Perceba como girar 1.5*pi é como girar -0.5*pi, portanto a função retornou o caminho mais curto para um mesmo resultado final.
     """
     return (angle + math.pi) % (2 * math.pi) - math.pi
+
+
+def euclidean_distance(coords: tuple[float, float, float, float]) -> float:
+    """
+    Essa função retorna a distância euclidiana entre dois pontos.
+
+    Args:
+        coords (tupla): Uma tupla com 4 valores (x1, y1, x2, y2), referente as coordenas.
+    """
+    x1, y1, x2, y2 = coords
+    return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
