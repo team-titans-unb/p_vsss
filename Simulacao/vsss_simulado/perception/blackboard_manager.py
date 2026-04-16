@@ -24,8 +24,8 @@ class VSSSBlackBoardManager:
         )
 
         # 3 Passo: Definir estado inicial seguro
-        self.data.ball_position = [0, 0, 0]
-        self.data.robot_position = [0, 0, 0]
+        self.data.ball_position = [0, 0]
+        self.data.robot_position = [0, 0]
         self.data.robot_orientation = 0
 
     def update(self, dados: Dict[str, tuple[float | None, float | None]]) -> None:
@@ -43,3 +43,13 @@ class VSSSBlackBoardManager:
         self.data.ball_position = dados.get("ball_position", None)
         self.data.robot_position = dados.get("robot_position", None)
         self.data.robot_orientation = dados.get("robot_orientation", None)
+
+    def update_ball(self, ball_pos: tuple[float, float] | None) -> None:
+        """
+        Recebe a posição da bola em formato de tupla e publica na BlackBoard.
+
+        Args:
+            ball_pos(tupla): Uma tupla com duas posições (ball_x, ball_y).
+        """
+
+        self.data.ball_position = ball_pos

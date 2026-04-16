@@ -5,7 +5,7 @@ import sys
 import queue
 import multiprocessing
 
-from common.math_utils import wrap_angle
+from common.math_utils import wrap_angle, euclidean_distance
 from common.controller_maths import speed_control
 
 from communication.connect_to_coppelia import connect_to_coppelia
@@ -64,8 +64,8 @@ class Corobeu:
         while True:
             self.update_black_board()
 
-            [robot_x, robot_y, _] = self.black_board.data.robot_position
-            [ball_x, ball_y, _] = self.black_board.data.ball_position
+            [robot_x, robot_y] = self.black_board.data.robot_position
+            [ball_x, ball_y] = self.black_board.data.ball_position
             robot_orientation = self.black_board.data.robot_orientation
             if (
                 robot_x is None
@@ -84,7 +84,7 @@ class Corobeu:
             angular_velocity = self.pd_controller.calculate_omega(orientation_error)
 
             # error_distance = math.sqrt((ball_y - y)**2 + (ball_x - x)**2)
-            # error_distance_global = math.sqrt((ball_y - y) ** 2 + (ball_x - x) ** 2)
+            # error_distance_global = euclidean_distance((robot_x, robot_y, ball_x, ball_y))
 
             current_time = time.time()
             if current_time - self.last_speed_time >= self.dt:

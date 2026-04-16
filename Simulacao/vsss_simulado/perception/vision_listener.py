@@ -48,12 +48,14 @@ def vision_listener_process(vision_queue: multiprocessing.Queue):
                 and status_ori == sim.simx_return_ok
             ):
                 dados = {
-                    "robot_position": robotPos,
-                    "ball_position": ballPos,
+                    "robot_position": robotPos[0:2],
+                    "ball_position": ballPos[0:2],
                     "robot_orientation": wrap_angle(robotOri[2] - math.pi / 2),
                 }  # Transforma os dados em um dicionário.
 
-                while (not vision_queue.empty()):  # Verifica se a Queue está vazia, se não:
+                while (
+                    not vision_queue.empty()
+                ):  # Verifica se a Queue está vazia, se não:
                     try:
                         vision_queue.get_nowait()  # Remove os dados da fila e finaliza o While.
                     except queue.Empty:  # Se estiver vazia, saimos do While e adicionamos os novos dados na fila.
