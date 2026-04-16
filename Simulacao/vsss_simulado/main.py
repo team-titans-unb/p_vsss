@@ -64,17 +64,18 @@ class Corobeu:
         while True:
             self.update_black_board()
 
-            [robot_x, robot_y] = self.black_board.data.robot_position
-            [ball_x, ball_y] = self.black_board.data.ball_position
+            robot_position = self.black_board.data.robot_position
+            ball_position = self.black_board.data.ball_position
             robot_orientation = self.black_board.data.robot_orientation
             if (
-                robot_x is None
-                or robot_y is None
+                robot_position is None
+                or ball_position is None
                 or robot_orientation is None
-                or ball_x is None
-                or ball_y is None
             ):
                 continue
+
+            robot_x, robot_y = robot_position
+            ball_x, ball_y = ball_position
 
             desired_orientation = math.atan2((ball_y - robot_y), (ball_x - robot_x))
             desired_orientation = wrap_angle(desired_orientation)

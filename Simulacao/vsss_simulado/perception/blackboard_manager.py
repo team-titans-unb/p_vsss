@@ -24,9 +24,9 @@ class VSSSBlackBoardManager:
         )
 
         # 3 Passo: Definir estado inicial seguro
-        self.data.ball_position = [0, 0]
-        self.data.robot_position = [0, 0]
-        self.data.robot_orientation = 0
+        self.data.ball_position = None
+        self.data.robot_position = None
+        self.data.robot_orientation = None
 
     def update(self, dados: Dict[str, tuple[float | None, float | None]]) -> None:
         """
