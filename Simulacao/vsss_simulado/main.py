@@ -1,12 +1,8 @@
 import time
-import math
 import signal
 import sys
 import queue
 import multiprocessing
-
-from common.math_utils import wrap_angle, euclidean_distance
-from common.controller_maths import speed_control
 
 from communication.connect_to_coppelia import connect_to_coppelia
 from communication.motor_adapter import CoppeliaMotorAdapter
@@ -23,15 +19,17 @@ from decision.behaviorTree import BehaviourTree
 class Corobeu:
     def __init__(
         self,
-        robot_id,
+        robot_name,
         vision_queue,
         motor_adapter,
         pd_controller,
         black_board,
         dt,
     ):
+        
+        self.inference_time = []
 
-        self.robot_id = robot_id
+        self.robot_name = robot_name
 
         self.vision_queue = vision_queue
         self.motor_adapter = motor_adapter
@@ -48,6 +46,7 @@ class Corobeu:
         self.last_environment_data = None
 
         self.bt = BehaviourTree(
+            robot_name=robot_name,
             motor_adapter=self.motor_adapter,
             pd_controller=self.pd_controller,
             linear_velocity=self.linear_velocity,
@@ -60,7 +59,7 @@ class Corobeu:
     def update_black_board(self) -> None:
         try:
             self.last_environment_data = self.vision_queue.get_nowait()
-            self.black_board.update(self.last_environment_data)
+            self.black_board.update(self.robot_name, self.last_environment_data)
             return
 
         except queue.Empty:
@@ -68,12 +67,16 @@ class Corobeu:
 
     def follow_ball(self):
         while True:
+            inicio = time.time()
             self.update_black_board()
             self.bt.tick()
+            fim = time.time()
+            self.inference_time.append(fim - inicio)
 
 
     def off(self, signum=None, frame=None):
         self.motor_adapter.stop_motors()
+        print((sum(self.inference_time)/len(self.inference_time))*1000)
         sys.exit()
 
 
@@ -100,7 +103,7 @@ if __name__ == "__main__":
     pd_controller = PDController(3.5, 0.9, 0.5, 0.033)
 
     meu_robo = Corobeu(
-        robot_id=0,
+        robot_name="robot_1",
         vision_queue=vision_queue,  # Passamos a fila aqui!
         motor_adapter=motor_adapter,
         pd_controller=pd_controller,

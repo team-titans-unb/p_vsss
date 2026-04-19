@@ -6,49 +6,45 @@ from common.controller_maths import speed_control
 
 
 class IsBallVisible(py_trees.behaviour.Behaviour):
-    def __init__(self, name="Verificar_Visibilidade_da_Bola"):
-        super().__init__(name) # chama o construtor da classe pai
-
-        # acessa a blackboard 
-        self.bb = py_trees.blackboard.Client(name="robo_1")
-
-        # registra a chave da posição da bola
-        self.bb.register_key(key="ball_position", access=py_trees.common.Access.READ)
-        self.bb.register_key(key="robot_position", access=py_trees.common.Access.READ)
-        self.bb.register_key(key="robot_orientation", access=py_trees.common.Access.READ)
-
-
+    def __init__(self, blackboard, name="Verificar_Visibilidade_da_Bola"):
+        super().__init__(name)  # chama o construtor da classe pai
+    
+        self.blackboard = blackboard
+    
     def update(self):
-        ball_pos = self.bb.ball_position
-        #ball_pos = None
+        ball_position = self.blackboard.ball_position
 
         # não enxerga a bola
-        if ball_pos is None:
-            print("bola não foi encontrada")
+        if ball_position is None:
             return py_trees.common.Status.FAILURE
-        
-        print("bola foi encontrada")
+
         return py_trees.common.Status.SUCCESS
-    
+
+
 class MoveToBall(py_trees.behaviour.Behaviour):
-    def __init__(self, motor_adapter, pd_controller, linear_velocity, dt, name="Ir_Para_A_Bola"):
+    def __init__(
+        self,
+        blackboard,
+        motor_adapter,
+        pd_controller,
+        linear_velocity,
+        dt,
+        name="Ir_Para_A_Bola",
+    ):
         super().__init__(name)
+        
         self.motor_adapter = motor_adapter
         self.pd_controller = pd_controller
         self.linear_velocity = linear_velocity
-        self.dt = dt
-        self.last_speed_time = time.time()
         
-        self.bb = py_trees.blackboard.Client(name="robo_1")
-
-        self.bb.register_key(key="ball_position", access=py_trees.common.Access.READ)
-        self.bb.register_key(key="robot_position", access=py_trees.common.Access.READ)
-        self.bb.register_key(key="robot_orientation", access=py_trees.common.Access.READ)
-
+        self.dt = dt
+        self.blackboard = blackboard
+        self.last_speed_time = time.time()
+ 
     def update(self):
-        robot_position = self.bb.robot_position
-        ball_position = self.bb.ball_position
-        robot_orientation = self.bb.robot_orientation
+        robot_position = self.blackboard.robot_position
+        robot_orientation = self.blackboard.robot_orientation
+        ball_position = self.blackboard.ball_position
 
         if robot_position is None or ball_position is None or robot_orientation is None:
             return py_trees.common.Status.FAILURE
@@ -73,6 +69,7 @@ class MoveToBall(py_trees.behaviour.Behaviour):
 
         return py_trees.common.Status.RUNNING
 
+
 class StopRobot(py_trees.behaviour.Behaviour):
     def __init__(self, motor_adapter, name="Parar_Motores"):
         super().__init__(name)
@@ -83,21 +80,37 @@ class StopRobot(py_trees.behaviour.Behaviour):
         return py_trees.common.Status.SUCCESS
 
 
-class BehaviourTree:    
-    def __init__(self, motor_adapter, pd_controller, linear_velocity, dt):
-        self.isBallVisible = IsBallVisible()
+class BehaviourTree:
+    def __init__(self, robot_name, motor_adapter, pd_controller, linear_velocity, dt):
+        
+        # INICIALIZAÇÃO DA BLACKBOARD 
+        self.bb = py_trees.blackboard.Client(name=robot_name)
+        self.bb.register_key(key="/" + robot_name + "/ball_position", access=py_trees.blackboard.common.Access.READ)
+        self.bb.register_key(key="/" + robot_name + "/robot_position", access=py_trees.blackboard.common.Access.READ) 
+        self.bb.register_key(key="/" + robot_name + "/robot_orientation", access=py_trees.blackboard.common.Access.READ)
+
+        self.blackboard_robot = self.bb.__getattr__(robot_name)
+
+        
+        # CRIANDO OS OBJETOS (NÓS)
+        self.isBallVisible = IsBallVisible(blackboard=self.blackboard_robot)
+        
         self.moveToBall = MoveToBall(
+            blackboard=self.blackboard_robot,
             motor_adapter=motor_adapter,
             pd_controller=pd_controller,
             linear_velocity=linear_velocity,
-            dt=dt
+            dt=dt,
         )
+        
         self.stopRobot = StopRobot(motor_adapter=motor_adapter)
 
         self.sequence = py_trees.composites.Sequence(name="Seguir_Bola", memory=False)
         self.sequence.add_children([self.isBallVisible, self.moveToBall])
 
-        self.root = py_trees.composites.Selector(name="Estrategia_Principal", memory=False)
+        self.root = py_trees.composites.Selector(
+            name="Estrategia_Principal", memory=False
+        )
         self.root.add_children([self.sequence, self.stopRobot])
 
         self.tree = py_trees.trees.BehaviourTree(root=self.root)
@@ -106,5 +119,3 @@ class BehaviourTree:
     def tick(self):
         self.tree.tick()
 
-
-    
