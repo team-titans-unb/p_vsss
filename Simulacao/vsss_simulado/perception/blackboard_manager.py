@@ -15,19 +15,22 @@ class VSSSBlackBoardManager:
         self.data = py_trees.blackboard.Client(name="Vision_Manager")
 
         # 2 Passo: Registrar os Contratos Globais (Chaves)
-
+        self.data.register_key(key="/game/state", access=py_trees.common.Access.WRITE)
+        self.data.register_key(key="/game/paused_point", access=py_trees.common.Access.WRITE)
+        
         for i in range(1, 4):
             self.data.register_key(key=f"/robot_{i}/robot_position", access=py_trees.common.Access.WRITE) 
             self.data.register_key(key=f"/robot_{i}/robot_orientation", access=py_trees.common.Access.WRITE)
             self.data.register_key(key=f"/robot_{i}/ball_position", access=py_trees.common.Access.WRITE) 
         
-            # 3 Passo: Definir estado inicial seguro
-            
+            # 3 Passo: Definir estado inicial seguro 
             self.data.set(f"/robot_{i}/robot_position", None)
             self.data.set(f"/robot_{i}/robot_orientation", None)
             self.data.set(f"/robot_{i}/ball_position", None)
-
-
+        
+        self.data.set("/game/state", 0)
+        self.data.set("/game/pause_point", None)
+        
     def update(
         self, robot_name: str, dados: Dict[str, tuple[float | None, float | None]]
     ) -> None:
