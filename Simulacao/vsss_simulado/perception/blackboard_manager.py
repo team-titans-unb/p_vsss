@@ -29,7 +29,7 @@ class VSSSBlackBoardManager:
             self.data.set(f"/robot_{i}/ball_position", None)
         
         self.data.set("/game/state", 0)
-        self.data.set("/game/pause_point", None)
+        self.data.set("/game/paused_point", None)
         
     def update(
         self, robot_name: str, dados: Dict[str, tuple[float | None, float | None]]
