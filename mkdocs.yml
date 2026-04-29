@@ -1,0 +1,53 @@
+site_name: VSSS
+
+repo_url: https://github.com/team-titans-unb/p_vsss
+repo_name: repo-vsss
+site_description: "Documentação do VSSS"
+
+nav:
+  - Home: index.md
+
+  - doc:
+    - Mecânica: pages/doc/doc.md
+  
+
+theme:
+  name: material
+  language: pt-BR
+
+  features:
+    - content.code.annotate
+    - content.tabs.link
+    - header.autohide
+    - navigation.instant
+    - navigation.top
+    - navigation.tracking
+  
+  palette:
+
+    - scheme: default
+      primary: '--md-primary-fg-color'
+      accent: '--md-primary-fg-color'
+      toggle:
+        icon: material/lightbulb-outline
+        name: Mude para o tema escuro
+        
+    - scheme: slate
+      primary: '--md-primary-fg-color'
+      accent: '--md-primary-fg-color'
+      toggle:
+        icon: material/lightbulb
+        name: Mude para o tema claro
+
+  
+  logo: assets/titansIco.ico
+  favicon: assets/titans.png
+  highlightjs: true
+
+extra_css:
+  - overrides/styles.css
+
+markdown_extensions:
+    - admonition
+    - pymdownx.details
+    - pymdownx.superfences

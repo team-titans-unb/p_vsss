@@ -11,6 +11,8 @@ __pycache__/
 *$py.class
 venv/
 .env
+venv
+env
 
 # ==========================================
 # C++ e Compilação
