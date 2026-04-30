@@ -89,3 +89,4 @@ Repositório destinado a documentação dos robôs do VSSS.
 | Versão | Descrição | Autor(es) | Data de Produção | Revisor(es) |
 | :----: | --------- | --------- | :--------------: | :--------------: | 
 | `1.0` | Modelagem inicial do readme | [Felipe das Neves](https://github.com/FelipeFreire-gf) | 02/03/2026 | ✓ | 
+| `1.1` | Merge com o repositório privado | [Filipe Barbosa](https://github.com/filpsl) | 29/04/2026 | ✓ | 
