@@ -7,9 +7,11 @@ site_description: "Documentação do VSSS"
 nav:
   - Home: index.md
 
-  - doc:
+  - Documentação:
     - Mecânica: pages/doc/doc.md
   
+  - Tutoriais p/ Membros:
+    - Envio de PWM para os Motores via Wi-Fi: pages/tutoriais/envio_pwm.md 
 
 theme:
   name: material
@@ -51,3 +53,5 @@ markdown_extensions:
     - admonition
     - pymdownx.details
     - pymdownx.superfences
+    - attr_list
+    - md_in_html
